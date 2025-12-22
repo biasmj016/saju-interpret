@@ -1,0 +1,34 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: prod
+
+bases:
+  - ../../base
+
+namePrefix: prod-
+
+replicas:
+  - name: saju-interpret
+    count: 3
+
+patches:
+  - target:
+      kind: Deployment
+      name: saju-interpret
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/env/0/value
+        value: "prod"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: "1Gi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: "2Gi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/cpu
+        value: "500m"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: "2000m"
