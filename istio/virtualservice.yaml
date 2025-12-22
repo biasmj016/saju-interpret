@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: saju-interpret-virtualservice
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - saju-interpret-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api/saju/
+    route:
+    - destination:
+        host: saju-interpret
+        port:
+          number: 8080
+    timeout: 30s
+    retries:
+      attempts: 3
+      perTryTimeout: 10s
+      retryOn: 5xx,reset,connect-failure,refused-stream

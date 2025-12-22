@@ -1,0 +1,23 @@
+name: Deploy to Kubernetes
+
+on:
+  workflow_run:
+    workflows: ["Build and Push Docker Image"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  sync-argocd:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Trigger ArgoCD Sync
+        run: |
+          echo "ArgoCD will automatically sync the application"
+          echo "If manual sync is needed, use: argocd app sync saju-interpret"
