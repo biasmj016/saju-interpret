@@ -6,5 +6,8 @@ resources:
   - service.yaml
   - configmap.yaml
 
-commonLabels:
-  app: saju-interpret
+labels:
+  - includeSelectors: true
+    includeTemplates: true
+    pairs:
+      app: saju-interpret

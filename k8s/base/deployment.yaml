@@ -23,8 +23,8 @@ spec:
     spec:
       containers:
       - name: saju-interpret
-        image: your-registry/saju-interpret:latest
-        imagePullPolicy: Always
+        image: saju-interpret:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
           name: http
@@ -32,8 +32,15 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "prod"
+        - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+          value: "file:/app/config/"
         - name: JAVA_OPTS
           value: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Dserver.port=8080"
+        volumeMounts:
+        - name: app-config
+          mountPath: /app/config/application.yaml
+          subPath: application.yaml
+          readOnly: true
         resources:
           requests:
             memory: "512Mi"
@@ -65,3 +72,7 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 30
+      volumes:
+      - name: app-config
+        configMap:
+          name: saju-interpret-config
