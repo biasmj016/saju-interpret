@@ -15,10 +15,17 @@ management:
       probes:
         enabled: true
       show-details: always
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
+
+client:
+  public-data:
+    base-url: http://apis.data.go.kr
+    service-key: ${SECRET_KEY}
+    endpoints:
+      lunar-calendar: /B090041/openapi/service/LrsrCldInfoService/getLunCalInfo
 
 logging:
   level:

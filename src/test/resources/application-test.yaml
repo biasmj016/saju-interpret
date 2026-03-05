@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: saju-interpret-test
+
+server:
+  port: 0
+
+client:
+  public-data:
+    base-url: http://apis.data.go.kr
+    service-key: ${SECRET_KEY}
+    endpoints:
+      lunar-calendar: /B090041/openapi/service/LrsrCldInfoService/getLunCalInfo
+
+logging:
+  level:
+    root: INFO
+    com.saju: DEBUG
