@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import com.saju.interpret.client.request.LunarCalendarClientRequest;
 import com.saju.interpret.client.response.LunarCalendarClientResponse;
 import com.saju.interpret.client.response.LunarCalendarClientResponse.LunarCalendar;
 import com.saju.interpret.client.response.LunarCalendarClientResponse.ResponseBody;
@@ -55,7 +56,8 @@ class PublicDataClientTest {
         when(responseSpec.body(LunarCalendarClientResponse.class)).thenReturn(response);
 
         // when
-        var result = client.getLunarCalendar("1996", "10", "22");
+        LunarCalendarClientRequest request = LunarCalendarClientRequest.of("1996", "10", "22");
+        var result = client.getLunarCalendar(request);
 
         // then
         assertThat(result).isNotNull();
@@ -77,9 +79,10 @@ class PublicDataClientTest {
         when(responseSpec.body(LunarCalendarClientResponse.class)).thenReturn(null);
 
         // when & then
-        assertThatThrownBy(() -> client.getLunarCalendar("2024", "01", "01"))
+        LunarCalendarClientRequest request = LunarCalendarClientRequest.of("1996", "10", "22");
+        assertThatThrownBy(() -> client.getLunarCalendar(request))
             .isInstanceOf(IllegalStateException.class)
-            .hasMessageContaining("공공데이터 API 응답에러");
+            .hasMessageContaining("사주 원천 데이터 조회에 실패했습니다.");
     }
 
     private LunarCalendar createSajuFixture() {

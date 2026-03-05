@@ -6,6 +6,21 @@ public record LunarCalendarClientResponse(
     ResponseHeader header,
     ResponseBody body
 ) {
+    /**
+     * API 응답이 실패했거나 데이터가 없는지 확인
+     */
+    public boolean isFailed() {
+        // 1. 헤더가 없거나 결과 코드가 정상(00)이 아닌 경우
+        if (header == null || !"00".equals(header.resultCode())) {
+            return true;
+        }
+        // 2. 바디나 아이템 데이터가 누락된 경우
+        return body == null || body.items() == null || body.items().item() == null;
+    }
+
+    public LunarCalendar getLunarCalendar() {
+        return body.items().item();
+    }
 
     public record ResponseHeader(
         String resultCode,
