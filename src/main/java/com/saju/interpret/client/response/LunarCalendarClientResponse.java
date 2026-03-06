@@ -1,21 +1,39 @@
 package com.saju.interpret.client.response;
 
+import static com.saju.interpret.common.constants.CommonConstants.PUBLIC_DATA_CLIENT_SUCCESS_CODE;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 
 public record LunarCalendarClientResponse(
     ResponseHeader header,
     ResponseBody body
 ) {
+
     /**
      * API 응답이 실패했거나 데이터가 없는지 확인
      */
     public boolean isFailed() {
-        // 1. 헤더가 없거나 결과 코드가 정상(00)이 아닌 경우
-        if (header == null || !"00".equals(header.resultCode())) {
-            return true;
-        }
-        // 2. 바디나 아이템 데이터가 누락된 경우
-        return body == null || body.items() == null || body.items().item() == null;
+        return !isValidHeader() || isBodyEmpty();
+    }
+
+    /**
+     * 헤더가 없거나 결과 코드가 정상(00)이 아닌 경우
+     */
+    private boolean isValidHeader() {
+        return Optional.ofNullable(header)
+            .map(ResponseHeader::resultCode)
+            .filter(PUBLIC_DATA_CLIENT_SUCCESS_CODE::equals)
+            .isPresent();
+    }
+
+    /**
+     * 바디나 데이터가 누락된 경우
+     */
+    private boolean isBodyEmpty() {
+        return Optional.ofNullable(body)
+            .map(ResponseBody::items)
+            .map(LunarCalendarItems::item)
+            .isEmpty();
     }
 
     public LunarCalendar getLunarCalendar() {

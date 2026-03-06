@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import com.saju.interpret.client.exception.PublicDataClientException;
 import com.saju.interpret.client.request.LunarCalendarClientRequest;
 import com.saju.interpret.client.response.LunarCalendarClientResponse;
 import com.saju.interpret.client.response.LunarCalendarClientResponse.LunarCalendar;
@@ -81,7 +82,7 @@ class PublicDataClientTest {
         // when & then
         LunarCalendarClientRequest request = LunarCalendarClientRequest.of("1996", "10", "22");
         assertThatThrownBy(() -> client.getLunarCalendar(request))
-            .isInstanceOf(IllegalStateException.class)
+            .isInstanceOf(PublicDataClientException.class)
             .hasMessageContaining("사주 원천 데이터 조회에 실패했습니다.");
     }
 
